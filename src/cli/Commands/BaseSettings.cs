@@ -32,6 +32,10 @@ namespace Db.Deploy.Cli.Commands
         [Description("Password. Only required if --user is specified")]
         public string Password { get; set; }
 
+        [CommandOption("--verbose")]
+        [Description("Verbose output.")]
+        public bool Verbose { get; set; }
+
         public string GetConnectionString()
         {
             IsSet(this);
@@ -49,6 +53,18 @@ namespace Db.Deploy.Cli.Commands
                 builder.Password = Password;
         
             return builder.ToString();
+        }
+
+        public virtual BaseSettings ForMaster()
+        {
+            return new BaseSettings
+            {
+                Server = Server,
+                Database = "master",
+                Schema = Schema,
+                UserId = UserId,
+                Password = Password
+            };
         }
 
         private static void IsSet(BaseSettings settings)

@@ -7,14 +7,6 @@ using Spectre.Console.Cli;
 
 namespace Db.Deploy.Cli.Commands
 {
-    public class FooCommand : Command
-    {
-        public override int Execute(CommandContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
     [Description("Extracts procedures, functions, views and triggers from given server and database")]
     public class ExtractCommand : Command<ExtractCommand.Settings>
     {
@@ -52,16 +44,16 @@ namespace Db.Deploy.Cli.Commands
             Logger.Information($"Extracting database {settings.Server}.{settings.Database}");
             Logger.Information($"Schema {settings.Schema}");
             
-            var objects = GetDatabaseObjects(settings).ToList();
+            var list = GetDatabaseObjects(settings).ToList();
 
-            if (!objects.Any())
+            if (!list.Any())
             {
                 Logger.Error($"No objects found in database {settings.Server}: {settings.Database}");
                 return -1;
             }
 
-            foreach (var o in objects)
-                CreateScript(settings, o);
+            foreach (var item in list)
+                CreateScript(settings, item);
 
             return 0;
         }

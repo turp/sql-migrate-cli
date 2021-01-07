@@ -15,6 +15,7 @@ namespace Db.Deploy.Cli
             {
                 config.AddCommand<ExtractCommand>("extract");
                 config.AddCommand<SchemaCommand>("schema");
+                config.AddCommand<CreateDatabaseCommand>("create");
             });
 
             return app.Run(args);
