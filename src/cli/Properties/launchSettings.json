@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "cli": {
+      "commandName": "Project",
+      "commandLineArgs": "extract -s localhost -d northwind -u sa -p intel.2020 -w foo -o temp -f"
+    }
+  }
+}

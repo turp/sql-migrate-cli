@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -8,7 +10,7 @@ namespace Db.Deploy.Cli.Commands
 {
     public class BaseSettings : CommandSettings
     {
-        [CommandOption(  "-s|--server <SERVER>")]
+        [CommandOption("-s|--server <SERVER>")]
         [Description("SQL Server name")]
         public string Server { get; set; }
         
@@ -16,7 +18,7 @@ namespace Db.Deploy.Cli.Commands
         [Description("Database name")]
         public string Database { get; set; }
 
-        [CommandOption("-o|--owner <SCHEMA>")]
+        [CommandOption("-w|--owner <SCHEMA>")]
         [Description("Schema Owner. Defaults to dbo")]
         public string Schema { get; set; } = "dbo";
 
@@ -69,6 +71,20 @@ namespace Db.Deploy.Cli.Commands
             command.ExecuteNonQuery();
         }
 
+        public static IEnumerable<IDataRecord> ExecuteReader(this BaseSettings settings, string sql, bool verbose = false)
+        {
+            using var connection = CreateConnection(settings, verbose);
+            using var command = new SqlCommand(sql, connection) {CommandTimeout = 600};
+            using var reader = command.ExecuteReader();
+            
+            while (reader.Read())
+            {
+                yield return reader;
+            }
+
+            reader.Close();
+        }
+ 
         public static T ExecuteScalar<T>(this BaseSettings settings, string sql, bool verbose = false)
         {
             using var connection = CreateConnection(settings, verbose);
@@ -78,6 +94,7 @@ namespace Db.Deploy.Cli.Commands
             if (val == null) return default(T);
             return (T)Convert.ChangeType(val, typeof(T));
         }
+
 
         private static SqlConnection CreateConnection(BaseSettings settings, bool verbose)
         {
