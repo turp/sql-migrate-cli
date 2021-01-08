@@ -1,28 +1,12 @@
 ![Dejavu](dejavu-logo-wide.png)
 
-# Deploy
+# Database Deploy CLI
 
 An API for CI/CD tasks.
 
-## [Cake](https://cakebuild.net) Integration
-
-Add the following lines to the top of your cake script. You can get the latest package version numbers by browsing the available dejavu.Deploy nuget packages on [Artifactory](https://ubit-artifactory-or.intel.com/artifactory/webapp/#/search/package/eyJwYWNrYWdlUGF5bG9hZCI6W3siaWQiOiJudWdldFBhY2thZ2VJZCIsInZhbHVlcyI6WyJkZWphdnUuRGVwbG95Il19XSwic2VsZWN0ZWRQYWNrYWdlVHlwZSI6eyJpZCI6Im51Z2V0IiwiZGlzcGxheU5hbWUiOiJOdUdldCIsImljb24iOiJudWdldCJ9fQ==). You can sort descending on the Modified column.
-
-```csharp
-#addin "nuget:?package=dejavu.Deploy&version=2020.5.13.1656"
-using dejavu.Deploy;  // So you don't have to fully qualify the types.
 ```
-
-Add a cake.config file next to your build.cake file that has the following settings:
-
-```bash
-    [Nuget]
-    Source=https://api.nuget.org/v3/index.json;https://ubit-artifactory-or.intel.com/artifactory/api/nuget/dejavu-nuget-local
-    LoadDependencies=true
+db-deploy-cli -s SERVER_NAME -d DB_NAME
 ```
-
-## API Documentation
-
 ### Build Version
 
 **Get the current date and time as a version number.** The format will be `yyyy.M.d.Hmm`
@@ -58,83 +42,34 @@ public class DatabaseSettings
 
 **Create a database if it does not already exist.**
 
-```csharp
-void Database.Create(DatabaseSettings settings, bool verbose = false);
-
-// Example
-Database.Create(
-    settings: new DatabaseSettings
-    {
-        Server = "MyServer",
-        Database = "MyDatabase"
-    });
+```
+.\db-deploy-cli.exe create -s SERVER_NAME -d DB_NAME --verbose
 ```
 
 **Drop a database if it exists.**
 
-```csharp
-void Database.Drop(DatabaseSettings settings, bool verbose = false);
-
-// Example
-Database.Drop(
-    settings: new DatabaseSettings
-    {
-        Server = "MyServer",
-        Database = "MyDatabase"
-    });
+```
+.\db-deploy-cli.exe drop -s SERVER_NAME -d DB_NAME
 ```
 
 **Perform a database backup to file `backupFilePath`**
 
-```csharp
-void Database.Backup(DatabaseSettings settings, string backupFilePath, bool verbose = false);
-
-// Example
-Database.Backup(
-    settings: new DatabaseSettings
-    {
-        Server = "MyServer",
-        Database = "MyDatabase"
-    },
-    // remember that this file is relative to the server
-    // that the backup command is being executed on
-    backupFilePath: @"D:\backups\my_database.bak"
-);
+```
+.\db-deploy-cli.exe backup -s SERVER_NAME -d DB_NAME -b ./folder_name --force
 ```
 
 **Perform a database restore from file `backupFilePath`.**
 
-```csharp
-void Database.Restore(DatabaseSettings settings, string backupFilePath, bool verbose = false);
+Note: File must be accessible from the server where the restore is being performed.
 
-// Example
-Database.Restore(
-    settings: new DatabaseSettings
-    {
-        Server = "MyServer",
-        Database = "MyDatabase"
-    },
-    // file must be accessible from the server where
-    // the restore is being performed
-    backupFilePath: @"\\server\path\backup_file.bak"
-);
+```
+.\db-deploy-cli.exe restore -s SERVER_NAME -d DB_NAME -b ./folder_name --force
 ```
 
 **Extract all stored procedures, functions, views and triggers from database and save to individual files in `folder`.**
 
-```csharp
-void Database.Extract(DatabaseSettings settings, string folder, bool overwriteExisting = false);
-
-// Example
-Database.Extract(
-    settings: new DatabaseSettings
-    {
-        Server = "MyServer",
-        Database = "MyDatabase"
-    },
-    folder: @"./database",
-    overwriteExisting: false
-);
+```
+.\db-deploy-cli.exe extract -s SERVER_NAME -d DB_NAME -o ./folder_name --force
 ```
 
 **Create a linked server. This will drop the linked if it already exists and recreate it. Requires server admin privileges. From a security standpoint, you should not store login and passwords inside the script. Pass this information into the script via environment variables in CI/CD**

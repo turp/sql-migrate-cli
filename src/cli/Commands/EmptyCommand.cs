@@ -1,11 +1,13 @@
-﻿using Spectre.Console;
+﻿using System.ComponentModel;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Db.Deploy.Cli.Commands
 {
+    [Description("Empty Command")]
     public class EmptyCommand : Command<EmptyCommand.Settings>
     {
-        public class Settings : CommandSettings
+        public class Settings : BaseSettings
         {
         }
 

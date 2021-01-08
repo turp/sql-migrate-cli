@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Db.Deploy.Cli.Commands
@@ -75,65 +72,6 @@ namespace Db.Deploy.Cli.Commands
                 throw new ArgumentException("Server is required.");
             if (string.IsNullOrWhiteSpace(settings.Database))
                 throw new ArgumentException("Database is required.");
-        }
-    }
-
-    public static class Extensions
-    {
-        public static void ExecuteNonQuery(this BaseSettings settings, string sql, bool verbose = false)
-        {
-            using var connection = CreateConnection(settings, verbose);
-            using var command = new SqlCommand(sql, connection) {CommandTimeout = 600};
-            command.ExecuteNonQuery();
-        }
-
-        public static IEnumerable<IDataRecord> ExecuteReader(this BaseSettings settings, string sql, bool verbose = false)
-        {
-            using var connection = CreateConnection(settings, verbose);
-            using var command = new SqlCommand(sql, connection) {CommandTimeout = 600};
-            using var reader = command.ExecuteReader();
-            
-            while (reader.Read())
-            {
-                yield return reader;
-            }
-
-            reader.Close();
-        }
- 
-        public static T ExecuteScalar<T>(this BaseSettings settings, string sql, bool verbose = false)
-        {
-            using var connection = CreateConnection(settings, verbose);
-            using var command = new SqlCommand(sql, connection) {CommandTimeout = 600};
-
-            var val = command.ExecuteScalar();
-            if (val == null) return default(T);
-            return (T)Convert.ChangeType(val, typeof(T));
-        }
-
-
-        private static SqlConnection CreateConnection(BaseSettings settings, bool verbose)
-        {
-            var connection = new SqlConnection(settings.GetConnectionString());
-            if (verbose)
-            {
-                connection.FireInfoMessageEventOnUserErrors = true;
-                connection.InfoMessage += ConnectionInfoMessageHandler;
-            }
-            connection.Open();
-
-            return connection;
-        }
-
-        private static void ConnectionInfoMessageHandler(object sender, SqlInfoMessageEventArgs e)
-        {
-            foreach (SqlError error in e.Errors)
-            {
-                if (error.Class == 0)
-                    AnsiConsole.MarkupLine($"[yellow]{error.Message}[/]");
-                else
-                    AnsiConsole.MarkupLine($"[red]{error.Message}[/]");
-            }
         }
     }
 }
