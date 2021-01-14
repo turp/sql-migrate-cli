@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Spectre.Console;
 
 namespace Db.Deploy.Cli.Commands
@@ -7,14 +8,24 @@ namespace Db.Deploy.Cli.Commands
     {
         public static void Information(string message)
         {
-            var t = $"{message.Replace("[", "[[").Replace("]", "]]")}";
-            AnsiConsole.MarkupLine(t);
+            AnsiConsole.MarkupLine(Clean(message));
+        }
+
+        private static string Clean(string message)
+        {
+            return message
+                .Replace("[", "[[")
+                .Replace("]", "]]");
         }
 
         public static void Error(string message)
         {
-            var t = $"[red]{message.Replace("[", "[[").Replace("]", "]]")}[/]";
-            AnsiConsole.MarkupLine(t);
+            AnsiConsole.MarkupLine($"[red]{Clean(message)}[/]");
+        }
+
+        public static void Warning(string message)
+        {
+            AnsiConsole.MarkupLine($"[yellow]{Clean(message)}[/]");
         }
     }
 }

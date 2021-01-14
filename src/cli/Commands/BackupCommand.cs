@@ -10,8 +10,8 @@ namespace Db.Deploy.Cli.Commands
     {
         public sealed class Settings : BaseSettings
         {
-            [CommandOption("-b|--backup-file <FilePath>")]
-            [Description("File name to store database backup")]
+            [CommandOption("-p|--path <FilePath>")]
+            [Description("Path to backup file. Must be relative to database server")]
             public string FilePath { get ; set; }
         }
 
@@ -52,7 +52,7 @@ namespace Db.Deploy.Cli.Commands
                 Console.WriteLine(sql);
             }
 
-            settings.ForMaster().ExecuteNonQuery(sql, true);
+            settings.ForMaster().ExecuteNonQuery(sql);
             return 0;
         }
     }

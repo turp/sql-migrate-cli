@@ -60,7 +60,8 @@ namespace Db.Deploy.Cli.Commands
                 Database = "master",
                 Schema = Schema,
                 UserId = UserId,
-                Password = Password
+                Password = Password,
+                Verbose = true
             };
         }
 

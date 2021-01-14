@@ -13,12 +13,13 @@ namespace Db.Deploy.Cli
 
             app.Configure(config =>
             {
-                config.AddCommand<ExtractCommand>("extract");
-                config.AddCommand<SchemaCommand>("schema");
                 config.AddCommand<CreateCommand>("create");
                 config.AddCommand<DropCommand>("drop");
                 config.AddCommand<BackupCommand>("backup");
                 config.AddCommand<RestoreCommand>("restore");
+                config.AddCommand<SchemaCommand>("schema");
+                config.AddCommand<ExtractCommand>("extract");
+                config.AddCommand<MigrateCommand>("migrate");
             });
 
             return app.Run(args);

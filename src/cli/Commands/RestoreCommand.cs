@@ -76,7 +76,6 @@ namespace Db.Deploy.Cli.Commands
             return string.IsNullOrEmpty(settings.FilePath)
                 ? ValidationResult.Error("Backup filename must be specified")
                 : base.Validate(context, settings);
-
         }
 
         public override int Execute(CommandContext context, Settings settings)
@@ -84,8 +83,6 @@ namespace Db.Deploy.Cli.Commands
             Logger.Information($"Restoring database {settings.Database} from backup file {settings.FilePath}.");
 
             // if database doesn't exist, report error
-            
-            var masterSettings = settings.ForMaster();
 
             var sql = $@"
                 IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{settings.Database}')
@@ -98,7 +95,7 @@ namespace Db.Deploy.Cli.Commands
             if (settings.Verbose)
                 Logger.Information(sql);
 
-            masterSettings.ExecuteNonQuery(sql, true);
+            settings.ForMaster().ExecuteNonQuery(sql);
             Logger.Information($"Database {settings.Database} restore complete.");
 
             return 0;
