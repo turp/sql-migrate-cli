@@ -10,7 +10,7 @@ namespace Db.Deploy.Cli.Commands
     {
         public sealed class Settings : BaseSettings
         {
-            [CommandOption("-p|--path <FilePath>")]
+            [CommandOption("-f|--file <FilePath>")]
             [Description("Path to backup file. Must be relative to database server")]
             public string FilePath { get ; set; }
         }

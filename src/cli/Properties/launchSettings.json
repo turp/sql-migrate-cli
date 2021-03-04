@@ -3,6 +3,9 @@
     "cli": {
       "commandName": "Project",
       "commandLineArgs": "restore -s localhost -d northwind -b file.bak -u sa -p intel.2020"
+    },
+    "Docker": {
+      "commandName": "Docker"
     }
   }
 }

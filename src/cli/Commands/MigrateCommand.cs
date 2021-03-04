@@ -13,7 +13,7 @@ namespace Db.Deploy.Cli.Commands
     {
         public class Settings : BaseSettings
         {
-            [CommandOption("-p|--path <FilePath>")]
+            [CommandOption("-f|--folder <FilePath>")]
             [Description("Path to migration scripts")]
             public string FilePath { get; set; }
         }

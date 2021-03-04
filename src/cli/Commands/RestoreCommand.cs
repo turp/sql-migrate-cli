@@ -12,8 +12,8 @@ namespace Db.Deploy.Cli.Commands
     {
         public class Settings : BaseSettings
         {
-            [CommandOption("-b|--backup-file <FilePath>")]
-            [Description("Backup file name to restore database")]
+            [CommandOption("-f|--file <FilePath>")]
+            [Description("Backup file name used to restore database. Must be relative to database server.")]
             public string FilePath { get; set; }
 
             public string WithOptions()

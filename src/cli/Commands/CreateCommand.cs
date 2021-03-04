@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Db.Deploy.Cli.Commands
 {
-    [Description("Create database (if it doesn't alredy exist)")]
+    [Description("Create database (if it doesn't already exist)")]
     public class CreateCommand : Command<BaseSettings>
     {
         public override int Execute(CommandContext context, BaseSettings settings)
