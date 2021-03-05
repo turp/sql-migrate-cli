@@ -4,9 +4,15 @@
 
 An API for CI/CD tasks.
 
+
+## Deploy
+
 ```
-db-deploy-cli -s SERVER_NAME -d DB_NAME
+docker build --tag amr-registry.caas.intel.com/ducttape/db-deploy-cli "C:\_dots\db-deploy\src" -f "C:\_dots\db-deploy\src\cli\Dockerfile"
+
+docker push amr-registry.caas.intel.com/ducttape/db-deploy-cli
 ```
+
 ### Build Version
 
 **Get the current date and time as a version number.** The format will be `yyyy.M.d.Hmm`

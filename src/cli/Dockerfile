@@ -8,6 +8,8 @@ RUN apt-get install -y curl
 RUN curl -o /usr/local/share/ca-certificates/IntelSHA256RootCA.crt http://certificates.intel.com/repository/certificates/IntelSHA256RootCA-Base64.crt
 RUN curl -o /usr/local/share/ca-certificates/IntelRootCA.crt http://certificates.intel.com/repository/certificates/Intel%20Root%20CA%20Base64.crt
 RUN update-ca-certificates
+# needed to resolve SSL handshake issue with SQL Server
+RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
 
 WORKDIR /app
 
