@@ -1,9 +1,6 @@
-![Dejavu](dejavu-logo-wide.png)
+# SQL Server Migration CLI
 
-# Database Deploy CLI
-
-An API for CI/CD tasks.
-
+An API for common database CI/CD tasks.
 
 ## Deploy
 
