@@ -15,9 +15,9 @@ namespace Db.Deploy.Cli.Commands
 
             var sql = $@"
                 IF NOT EXISTS (SELECT * FROM [sys].[objects] WHERE [object_id] = OBJECT_ID(N'[dbo].[SchemaVersion]') AND [type] IN (N'U'))
-	                SELECT 0 AS [Version];
+	                SELECT 0 AS [Version]
                 ELSE
-	                SELECT TOP 1 [Version] FROM [dbo].[SchemaVersion] WHERE [SchemaName] = '{settings.Schema}' ORDER BY [Version] DESC;
+	                SELECT TOP 1 [Version] FROM [dbo].[SchemaVersion] WHERE [SchemaName] = '{settings.Schema}' ORDER BY [Version] DESC
             ";
 
             var result = settings.ExecuteScalar<int>(sql);
@@ -36,8 +36,8 @@ namespace Db.Deploy.Cli.Commands
 	                [Script] nvarchar(250) NOT NULL,
 	                [ScriptRunDate] datetime NOT NULL,
 	                [SchemaName] VARCHAR(25) NOT NULL CONSTRAINT DF_SchemaVersion_SchemaName DEFAULT 'dbo',
-	                CONSTRAINT [PK_Schema_Version] PRIMARY KEY CLUSTERED (SchemaName ASC, [Version] ASC) )
-                END;
+	                CONSTRAINT [PK_Schema_Version] PRIMARY KEY CLUSTERED (SchemaName ASC, [Version] ASC) 
+                )
             ";
 
             settings.ExecuteNonQuery(sql);
