@@ -3,9 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Db.Deploy.Cli</RootNamespace>
-    <AssemblyName>db-deploy-cli</AssemblyName>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <RootNamespace>Sql.Migrate.Cli</RootNamespace>
+    <AssemblyName>sql-migrate-cli</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
