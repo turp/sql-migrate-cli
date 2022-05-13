@@ -7,18 +7,14 @@ using Spectre.Console.Cli;
 
 namespace Db.Deploy.Cli.Commands
 {
-    [Description("Extracts procedures, functions, views and triggers from given server and database")]
-    public class ExtractCommand : Command<ExtractCommand.Settings>
+    [Description("Import (deploys) procedures, functions, views and triggers from given server and database")]
+    public class ImportCommand : Command<ImportCommand.Settings>
     {
         public sealed class Settings : BaseSettings
         {
-            [CommandOption("-o|--out <Folder>")]
-            [Description("Path for writing script files")]
+            [CommandOption("-f|--folder <Folder>")]
+            [Description("Path for script files")]
             public string Folder { get; set; }
-
-            [CommandOption("-f|--force")]
-            [Description("Overwrite existing script files")]
-            public bool Force { get; set; } = true;
         }
 
         public override ValidationResult Validate(CommandContext context, Settings settings)
@@ -36,12 +32,12 @@ namespace Db.Deploy.Cli.Commands
             }
 
             return string.IsNullOrEmpty(settings.Folder) 
-                ? ValidationResult.Error("Output folder must be specified") 
+                ? ValidationResult.Error("Script folder must be specified") 
                 : base.Validate(context, settings);
         }
         public override int Execute(CommandContext context, Settings settings)
         {
-            Logger.Information($"Extracting database {settings.Server}.{settings.Database}");
+            Logger.Information($"Importing to database {settings.Server}.{settings.Database}");
             Logger.Information($"Schema {settings.Schema}");
             
             var list = GetDatabaseObjects(settings).ToList();
