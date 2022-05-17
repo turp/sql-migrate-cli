@@ -56,14 +56,14 @@ namespace Db.Deploy.Cli.Commands
             return path;
         }
 
-        public static void ExecuteNonQuery(this BaseSettings settings, string sql)
+        public static void ExecuteNonQuery(this BaseSettings settings, string sql, bool verbose = false)
         {
             using var connection = CreateConnection(settings);
             using var command = new SqlCommand(sql, connection) {CommandTimeout = 600};
             command.ExecuteNonQuery();
         }
 
-        public static void ExecuteNonQuery(this BaseSettings settings, IEnumerable<string> batches)
+        public static void ExecuteNonQuery(this BaseSettings settings, IEnumerable<string> batches, bool verbose = false)
         {
             if (!batches.Any())
             {

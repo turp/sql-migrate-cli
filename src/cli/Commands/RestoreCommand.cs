@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -73,8 +74,14 @@ namespace Db.Deploy.Cli.Commands
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            return string.IsNullOrEmpty(settings.FilePath)
-                ? ValidationResult.Error("Backup filename must be specified")
+
+            if (string.IsNullOrEmpty(settings.FilePath))
+                ValidationResult.Error("Backup filename must be specified");
+
+            var path = Path.GetFullPath(settings.FilePath);
+
+            return !File.Exists(path)
+                ? ValidationResult.Error("Backup file does not exist")
                 : base.Validate(context, settings);
         }
 
@@ -82,12 +89,13 @@ namespace Db.Deploy.Cli.Commands
         {
             Logger.Information($"Restoring database {settings.Database} from backup file {settings.FilePath}.");
 
-            // if database doesn't exist, report error
+            var path = Path.GetFullPath(settings.FilePath);
+            Console.WriteLine(path);
 
             var sql = $@"
                 IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{settings.Database}')
 	                ALTER DATABASE [{settings.Database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                RESTORE DATABASE [{settings.Database}] FROM DISK = '{settings.FilePath}'
+                RESTORE DATABASE [{settings.Database}] FROM DISK = '{path}'
                 WITH {settings.WithOptions()};
                 ALTER DATABASE [{settings.Database}] SET MULTI_USER;
             ";
