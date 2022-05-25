@@ -16,6 +16,7 @@ SET DB_NAME=AdventureWorks
 sqlcmd -S %SERVER% -Q "RESTORE DATABASE %DB_NAME% FROM DISK = '%~dp0AdventureWorks\backup\AdventureWorks.bak' WITH FILE = 1, NOUNLOAD, REPLACE, STATS = 5"
 
 ::all stored procedures, functions, views and triggers from database and save to individual files in `folder`
-%CLI% export -s %SERVER% -d %DB_NAME% -o ./AdventureWorks -f
+::%CLI% export -s %SERVER% -d %DB_NAME% -o ./AdventureWorks -f
 
-::
+::migrate database schema - apply one-time scripts
+%CLI% migrate -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/migrations
