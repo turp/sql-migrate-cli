@@ -97,7 +97,7 @@ namespace Db.Deploy.Cli.Commands
             var path = Path.Combine(settings.Folder, sqlObject.Type + "s");
             var fileName = Path.Combine(path,
                 sqlObject.Name
-                    .Replace("[dbo].", string.Empty)
+                    .Replace("[dbo].", "dbo.")
                     .Replace("[", string.Empty)
                     .Replace("]", string.Empty)
                 + ".sql"

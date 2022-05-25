@@ -8,11 +8,14 @@ SET DB_NAME=AdventureWorks
 :: Create a database if it does not already exist
 %CLI% create -s %SERVER% -d %DB_NAME%
 
+:: Backup database
+:: sqlcmd -S %SERVER% -Q "BACKUP DATABASE %DB_NAME% TO DISK = '%~dp0AdventureWorks\backup\AdventureWorks.bak' WITH NOFORMAT, NOINIT, NAME = 'Full Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10"
+
 :: Restore database
-%CLI% restore -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/backup/AdventureWorks.bak --verbose
+:: %CLI% restore -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/backup/AdventureWorks.bak --verbose
+sqlcmd -S %SERVER% -Q "RESTORE DATABASE %DB_NAME% FROM DISK = '%~dp0AdventureWorks\backup\AdventureWorks.bak' WITH FILE = 1, NOUNLOAD, REPLACE, STATS = 5"
 
 ::all stored procedures, functions, views and triggers from database and save to individual files in `folder`
 %CLI% export -s %SERVER% -d %DB_NAME% -o ./AdventureWorks -f
 
-::```
 ::
