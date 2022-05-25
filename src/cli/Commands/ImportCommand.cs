@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -31,23 +32,62 @@ namespace Db.Deploy.Cli.Commands
                 throw new System.ArgumentNullException(nameof(settings));
             }
 
-            return string.IsNullOrEmpty(settings.Folder) 
-                ? ValidationResult.Error("Script folder must be specified") 
+            return string.IsNullOrEmpty(settings.Folder)
+                ? ValidationResult.Error("Script folder must be specified")
                 : base.Validate(context, settings);
         }
+
         public override int Execute(CommandContext context, Settings settings)
         {
-            Logger.Information($"Importing to database {settings.Server}.{settings.Database}");
+            Logger.Information($"Importing to Server {settings.Server}");
+            Logger.Information($"Database {settings.Database}");
             Logger.Information($"Schema {settings.Schema}");
 
             var filePath = Path.GetFullPath(settings.Folder);
+            var sql = GetSql(filePath, settings.Verbose);
 
-            Logger.Information($"Executing {Path.GetFileName(filePath)}");
+            var batches = sql
+                .Split('\n')
+                .GetSqlBatches();
 
-            var batches = filePath.GetSqlBatches();
             settings.ExecuteNonQuery(batches, settings.Verbose);
 
             return 0;
         }
-	}
+
+        private string GetSql(string filePath, bool verbose)
+        {
+            var sb = new StringBuilder();
+
+            if (File.Exists(filePath))
+            {
+                foreach (var line in File.ReadAllLines(filePath))
+                {
+                    sb.AppendLine(line);
+                }
+
+                if (verbose)
+                    Logger.Information($"Appending {Path.GetFileName(filePath)}");
+
+                return sb.ToString();
+            }
+
+            if (!Directory.Exists(filePath)) return string.Empty;
+
+            foreach (var file in Directory.GetFiles(filePath, "*.sql", SearchOption.AllDirectories))
+            {
+                foreach (var line in File.ReadAllLines(file))
+                {
+                    sb.AppendLine(line);
+                }
+
+                if (verbose)
+                    Logger.Information($"Appending {Path.GetFileName(file)}");
+
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+    }
 }

@@ -19,6 +19,7 @@ namespace Db.Deploy.Cli
                 config.AddCommand<RestoreCommand>("restore");
                 config.AddCommand<SchemaCommand>("schema");
                 config.AddCommand<ExportCommand>("export");
+                config.AddCommand<ImportCommand>("import");
                 config.AddCommand<MigrateCommand>("migrate");
             });
 
