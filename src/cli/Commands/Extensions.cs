@@ -150,10 +150,8 @@ namespace Db.Deploy.Cli.Commands
         {
             foreach (SqlError error in e.Errors)
             {
-                if (error.Class == 0)
-                    AnsiConsole.MarkupLine($"[yellow]{error.Message}[/]");
-                else
-                    AnsiConsole.MarkupLine($"[red]{error.Message}[/]");
+                AnsiConsole.MarkupLine(error.Class == 0 ? "[yellow]{0}[/]" : "[red]{0}[/]",
+                    error.Message.EscapeMarkup());
             }
         }
     }

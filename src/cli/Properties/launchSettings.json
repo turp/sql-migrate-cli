@@ -2,7 +2,7 @@
   "profiles": {
     "cli": {
       "commandName": "Project",
-      "commandLineArgs": "restore -s . -d AdventureWorks -f $(SolutionDir)../example/AdventureWorks/backup/AdventureWorksLT2019.bak"
+      "commandLineArgs": "import -s . -d AdventureWorks -f $(SolutionDir)../example/AdventureWorks/Views "
     },
     "Docker": {
       "commandName": "Docker"

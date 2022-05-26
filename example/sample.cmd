@@ -22,5 +22,10 @@ sqlcmd -S %SERVER% -Q "RESTORE DATABASE %DB_NAME% FROM DISK = '%~dp0AdventureWor
 %CLI% migrate -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/migrations
 
 ::deploy procedures, views, functions and triggers
-%CLI% import -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/Procedures
+%CLI% import -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/Functions --verbose
+%CLI% import -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/Procedures --verbose
+%CLI% import -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/Views --verbose
+%CLI% import -s %SERVER% -d %DB_NAME% -f ./AdventureWorks/Triggers --verbose
+
+
 
