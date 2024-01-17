@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Spectre.Console.Cli;
 using System.ComponentModel;
-using Spectre.Console.Cli;
 
-namespace Db.Deploy.Cli.Commands
+namespace Sql.Migrate.Cli.Commands;
+
+[Description("Create database (if it doesn't already exist)")]
+public class CreateCommand : Command<BaseSettings>
 {
-    [Description("Create database (if it doesn't already exist)")]
-    public class CreateCommand : Command<BaseSettings>
-    {
-        public override int Execute(CommandContext context, BaseSettings settings)
-        {
-            Logger.Information($"Creating database {settings.Database} if it does not exist.");
+	public override int Execute(CommandContext context, BaseSettings settings)
+	{
+		Logger.Information($"Creating database {settings.Database} if it does not exist.");
 
-            var sql = $@"
+		var sql = $@"
                 IF EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{settings.Database}')
                 BEGIN
 	                SELECT 'DATABASE {settings.Database} ALREADY EXISTS';
@@ -25,9 +24,8 @@ namespace Db.Deploy.Cli.Commands
                 END
             ";
 
-            var result = settings.ForMaster().ExecuteScalar<string>(sql);
-            Logger.Information(result);
-            return 0;
-        }
-    }
+		var result = settings.ForMaster().ExecuteScalar<string>(sql);
+		Logger.Information(result);
+		return 0;
+	}
 }

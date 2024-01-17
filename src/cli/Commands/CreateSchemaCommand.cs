@@ -1,16 +1,16 @@
 ﻿using Spectre.Console.Cli;
 
-namespace Db.Deploy.Cli.Commands
-{
-    public class CreateSchemaCommand : Command<CreateSchemaCommand.Settings>
-    {
-        public sealed class Settings : BaseSettings
-        {
-        }
+namespace Sql.Migrate.Cli.Commands;
 
-        public override int Execute(CommandContext context, Settings settings)
-        {
-            var sql = $@"
+public class CreateSchemaCommand : Command<CreateSchemaCommand.Settings>
+{
+	public sealed class Settings : BaseSettings
+	{
+	}
+
+	public override int Execute(CommandContext context, Settings settings)
+	{
+		var sql = $@"
                 IF NOT EXISTS (SELECT * FROM [sys].[objects] WHERE [object_id] = OBJECT_ID(N'[dbo].[SchemaVersion]') AND [type] IN (N'U'))
                 BEGIN
 	                CREATE TABLE [dbo].[SchemaVersion] (
@@ -39,8 +39,7 @@ namespace Db.Deploy.Cli.Commands
                 END;
             ";
 
-            settings.ExecuteNonQuery(sql);
-            return 0;
-        }
-    }
+		settings.ExecuteNonQuery(sql);
+		return 0;
+	}
 }

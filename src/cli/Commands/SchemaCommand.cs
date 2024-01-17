@@ -1,33 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Spectre.Console;
+﻿using Spectre.Console;
 using Spectre.Console.Cli;
+using System.ComponentModel;
 
-namespace Db.Deploy.Cli.Commands
+namespace Sql.Migrate.Cli.Commands;
+
+[Description("Displays current schema version for the given server and database")]
+public class SchemaCommand : Command<BaseSettings>
 {
-    [Description("Displays current schema version for the given server and database")]
-    public class SchemaCommand : Command<BaseSettings>
-    {
-        public override int Execute(CommandContext context, BaseSettings settings)
-        {
-            CreateTableIfNotExists(settings);
+	public override int Execute(CommandContext context, BaseSettings settings)
+	{
+		CreateTableIfNotExists(settings);
 
-            var sql = $@"
+		var sql = $@"
                 IF NOT EXISTS (SELECT * FROM [sys].[objects] WHERE [object_id] = OBJECT_ID(N'[dbo].[SchemaVersion]') AND [type] IN (N'U'))
 	                SELECT 0 AS [Version]
                 ELSE
 	                SELECT TOP 1 [Version] FROM [dbo].[SchemaVersion] WHERE [SchemaName] = '{settings.Schema}' ORDER BY [Version] DESC
             ";
 
-            var result = settings.ExecuteScalar<int>(sql);
-            AnsiConsole.WriteLine($"Current Schema Version: {result}");
-            return result;
-        }
+		var result = settings.ExecuteScalar<int>(sql);
+		AnsiConsole.WriteLine($"Current Schema Version: {result}");
+		return result;
+	}
 
-        private void CreateTableIfNotExists(BaseSettings settings)
-        {
-            var sql = $@"
+	private void CreateTableIfNotExists(BaseSettings settings)
+	{
+		var sql = $@"
                 IF EXISTS (SELECT * FROM [sys].[objects] WHERE [object_id] = OBJECT_ID(N'[dbo].[SchemaVersion]') AND [type] IN (N'U'))
                     RETURN;
 
@@ -40,7 +38,6 @@ namespace Db.Deploy.Cli.Commands
                 )
             ";
 
-            settings.ExecuteNonQuery(sql);
-        }
-    }
+		settings.ExecuteNonQuery(sql);
+	}
 }

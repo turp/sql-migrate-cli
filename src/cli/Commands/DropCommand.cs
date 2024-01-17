@@ -1,16 +1,16 @@
-﻿using System.ComponentModel;
-using Spectre.Console.Cli;
+﻿using Spectre.Console.Cli;
+using System.ComponentModel;
 
-namespace Db.Deploy.Cli.Commands
+namespace Sql.Migrate.Cli.Commands;
+
+[Description("Drop database (if it exists)")]
+public class DropCommand : Command<BaseSettings>
 {
-    [Description("Drop database (if it exists)")]
-    public class DropCommand : Command<BaseSettings>
-    {
-        public override int Execute(CommandContext context, BaseSettings settings)
-        {
-            Logger.Information($"Dropping database {settings.Database}");
+	public override int Execute(CommandContext context, BaseSettings settings)
+	{
+		Logger.Information($"Dropping database {settings.Database}");
 
-            var sql = $@"
+		var sql = $@"
                 IF NOT EXISTS (SELECT * FROM [sys].[databases] WHERE [name] = '{settings.Database}')
                 BEGIN
 	                SELECT 'DATABASE {settings.Database} DOES NOT EXIST';
@@ -26,9 +26,8 @@ namespace Db.Deploy.Cli.Commands
                     SELECT 'FAILED TO DROP DATABASE {settings.Database}'
             ";
 
-            var result = settings.ForMaster().ExecuteScalar<string>(sql);
-            Logger.Information(result);
-            return 0;
-        }
-    }
+		var result = settings.ForMaster().ExecuteScalar<string>(sql);
+		Logger.Information(result);
+		return 0;
+	}
 }
